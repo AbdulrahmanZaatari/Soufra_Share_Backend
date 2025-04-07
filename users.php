@@ -1,5 +1,8 @@
 <?php
 require 'connection.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -22,7 +25,7 @@ switch ($method) {
         deleteUser();
         break;
     default:
-        http_response_code(405); 
+        http_response_code(405); // Method Not Allowed
         echo json_encode(['message' => 'Method not allowed']);
         break;
 }
@@ -61,15 +64,17 @@ function createUser() {
     $username = $data->username;
     $full_name = $data->full_name;
     $email = $data->email;
-    $password = password_hash($data->password, PASSWORD_DEFAULT); // Hash the password
+    $password = password_hash($data->password, PASSWORD_DEFAULT); 
     $profile_picture = $data->profile_picture ?? null;
     $location = $data->location ?? null;
     $national_id = $data->national_id ?? null;
     $is_cook = $data->is_cook ?? 0;
+    $birth_data = $data->birth_data ?? null;
+    $phone_num = $data->phone_num ?? null;   
 
-    $sql = "INSERT INTO Users (username, full_name, email, password, profile_picture, location, national_id, is_cook) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Users (username, full_name, email, password, profile_picture, location, national_id, is_cook, birth_data, phone_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssi", $username, $full_name, $email, $password, $profile_picture, $location, $national_id, $is_cook);
+    $stmt->bind_param("ssssssssss", $username, $full_name, $email, $password, $profile_picture, $location, $national_id, $is_cook, $birth_data, $phone_num);
 
     if ($stmt->execute()) {
         http_response_code(201);
@@ -93,10 +98,12 @@ function updateUser() {
     $national_id = $data->national_id ?? null;
     $rating = $data->rating ?? null;
     $is_cook = $data->is_cook ?? null;
+    $birth_data = $data->birth_data ?? null; // Get birth_data for update
+    $phone_num = $data->phone_num ?? null;   // Get phone_num for update
 
-    $sql = "UPDATE Users SET username=?, full_name=?, email=?, password=?, profile_picture=?, location=?, national_id=?, rating=?, is_cook=? WHERE user_id=?";
+    $sql = "UPDATE Users SET username=?, full_name=?, email=?, password=?, profile_picture=?, location=?, national_id=?, rating=?, is_cook=?, birth_data=?, phone_num=? WHERE user_id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssidi", $username, $full_name, $email, $password, $profile_picture, $location, $national_id, $rating, $is_cook, $user_id);
+    $stmt->bind_param("sssssssiddssi", $username, $full_name, $email, $password, $profile_picture, $location, $national_id, $rating, $is_cook, $birth_data, $phone_num, $user_id);
 
     if ($stmt->execute()) {
         echo json_encode(['message' => 'User updated successfully']);
