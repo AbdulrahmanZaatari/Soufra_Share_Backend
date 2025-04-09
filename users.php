@@ -16,12 +16,16 @@ switch ($method) {
         }
         break;
     case 'POST':
-        createUser();
+        if (isset($_GET['action']) && $_GET['action'] == 'signin') {
+            signInUser();
+        } else {
+            createUser();
+        }
         break;
-    case 'PUT': 
+    case 'PUT':
         updateUser();
         break;
-    case 'DELETE': 
+    case 'DELETE':
         deleteUser();
         break;
     default:
@@ -64,13 +68,13 @@ function createUser() {
     $username = $data->username;
     $full_name = $data->full_name;
     $email = $data->email;
-    $password = password_hash($data->password, PASSWORD_DEFAULT); 
+    $password = password_hash($data->password, PASSWORD_DEFAULT);
     $profile_picture = $data->profile_picture ?? null;
     $location = $data->location ?? null;
     $national_id = $data->national_id ?? null;
     $is_cook = $data->is_cook ?? 0;
     $birth_data = $data->birth_data ?? null;
-    $phone_num = $data->phone_num ?? null;   
+    $phone_num = $data->phone_num ?? null;
 
     $sql = "INSERT INTO Users (username, full_name, email, password, profile_picture, location, national_id, is_cook, birth_data, phone_num) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
@@ -82,6 +86,33 @@ function createUser() {
     } else {
         http_response_code(500);
         echo json_encode(['message' => 'Error creating user: ' . $stmt->error]);
+    }
+}
+
+function signInUser() {
+    global $conn;
+    $data = json_decode(file_get_contents("php://input"));
+    $email = $data->email;
+    $password = $data->password;
+
+    $sql = "SELECT user_id, password FROM Users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['password'])) {
+            // Password is correct
+            echo json_encode(['success' => true, 'message' => 'Sign in successful', 'user_id' => $user['user_id']]);
+        } else {
+            // Incorrect password
+            echo json_encode(['success' => false, 'message' => 'Incorrect password']);
+        }
+    } else {
+        // Email not found
+        echo json_encode(['success' => false, 'message' => 'Email not found']);
     }
 }
 
