@@ -98,7 +98,7 @@ function createMeal() {
 
     $sql = "INSERT INTO Meals (user_id, name, price, quantity, location, delivery_option, description, image_paths, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isdiissss", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $image_paths, $created_at);
+    $stmt->bind_param("isdisssss", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $image_paths, $created_at);
 
     if ($stmt->execute()) {
         http_response_code(201);
