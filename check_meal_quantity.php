@@ -15,7 +15,7 @@
         exit();
     }
 
-    $sql = "SELECT quantity FROM meals WHERE meal_id = ?";
+    $sql = "SELECT quantity, name FROM meals WHERE meal_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $meal_id);
 
@@ -24,10 +24,11 @@
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $quantity_available = $row['quantity'];
+            $meal_name = $row['name']; 
             if ($quantity_ordered <= $quantity_available) {
-                $response = array("available" => true, "quantity_available" => $quantity_available); 
+                $response = array("available" => true, "quantity_available" => $quantity_available, "meal_name" => $meal_name);
             } else {
-                $response = array("available" => false, "message" => "Quantity not available for meal ID: " . $meal_id, "quantity_available" => $quantity_available); // Include available quantity
+                $response = array("available" => false, "message" => "Quantity not available for meal ID: " . $meal_id, "quantity_available" => $quantity_available, "meal_name" => $meal_name); // Include available quantity and meal name
             }
             echo json_encode($response);
         } else {
