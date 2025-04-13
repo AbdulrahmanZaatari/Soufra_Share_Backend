@@ -62,7 +62,10 @@ function getReviewsByReviewer($reviewer_id) {
 
 function getReviewsByReviewee($reviewee_id) {
     global $conn;
-    $sql = "SELECT * FROM Reviews WHERE reviewee_id = ?";
+    $sql = "SELECT r.review_id, r.reviewer_id, r.reviewee_id, r.rating, r.comment, r.review_date, u.username AS reviewer_username
+            FROM Reviews r
+            INNER JOIN Users u ON r.reviewer_id = u.user_id
+            WHERE r.reviewee_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $reviewee_id);
     $stmt->execute();

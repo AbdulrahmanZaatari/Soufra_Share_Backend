@@ -18,6 +18,8 @@ switch ($method) {
     case 'POST':
         if (isset($_GET['action']) && $_GET['action'] == 'signin') {
             signInUser();
+        } elseif (isset($_GET['action']) && $_GET['action'] == 'updateUserDetails') {
+            updateUserDetails();
         } else {
             createUser();
         }
@@ -116,7 +118,32 @@ function signInUser() {
     }
 }
 
+function updateUserDetails() {
+    global $conn;
+    $data = json_decode(file_get_contents("php://input"));
+    $user_id = $data->user_id;
+    $username = $data->username ?? null;
+    $full_name = $data->full_name ?? null;
+    $email = $data->email ?? null;
+    $phone_num = $data->phone_num ?? null;
+    $location = $data->location ?? null;
+    $profile_picture = $data->profile_picture ?? null; // This will be the Base64 string
+
+    $sql = "UPDATE Users SET username=?, full_name=?, email=?, phone_num=?, location=?, profile_picture=? WHERE user_id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssi", $username, $full_name, $email, $phone_num, $location, $profile_picture, $user_id);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'User details updated successfully']);
+    } else {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Error updating user details: ' . $stmt->error]);
+    }
+}
+
 function updateUser() {
+    // This function is likely not used directly by the Android app anymore for updating details
+    // Consider removing or updating it if needed for other purposes.
     global $conn;
     $data = json_decode(file_get_contents("php://input"));
     $user_id = $data->user_id;
