@@ -19,7 +19,7 @@
                 c.meal_id,
                 c.quantity AS cart_quantity,
                 m.name AS meal_name,
-                m.image_url AS meal_image_url,
+                m.image_paths AS meal_image_url,
                 m.price AS meal_price
             FROM cart c
             INNER JOIN meals m ON c.meal_id = m.meal_id
