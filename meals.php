@@ -6,6 +6,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $method = $_SERVER['REQUEST_METHOD'];
+$uploadDirectory = 'uploads/';
+$response = array();
 
 switch ($method) {
     case 'GET':
@@ -83,53 +85,101 @@ function getMeal($id) {
 }
 
 function createMeal() {
-    global $conn;
-    $data = json_decode(file_get_contents("php://input"));
-    $user_id = $data->user_id;
-    $name = $data->name;
-    $price = $data->price;
-    $quantity = $data->quantity;
-    $location = $data->location;
-    $delivery_option = $data->delivery_option;
-    $description = $data->description;
-    $image_paths = $data->image_paths ?? null;
-    $created_at = date('Y-m-d H:i:s');
+    global $conn, $uploadDirectory, $response;
+    error_log("createMeal() function called");
+    error_log("Request Method: " . $_SERVER['REQUEST_METHOD']);
+    error_log("\$_FILES contents: " . print_r($_FILES, true));
+    error_log("\$_POST contents: " . print_r($_POST, true));
 
-    $sql = "INSERT INTO Meals (user_id, name, price, quantity, location, delivery_option, description, image_paths, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isdisssss", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $image_paths, $created_at);
+    $mealImagePaths = array();
+    // Handle meal image upload
+    if (isset($_FILES['meal_image']) && $_FILES['meal_image']['error'] === UPLOAD_ERR_OK) {
+        $file = $_FILES['meal_image'];
+        $filename = basename($file['name']);
+        $fileExtension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $allowedExtensions = array('jpg', 'jpeg', 'png', 'gif');
 
-    if ($stmt->execute()) {
-        http_response_code(201);
-        echo json_encode(['message' => 'Meal created successfully', 'meal_id' => $conn->insert_id]);
-    } else {
-        http_response_code(500);
-        echo json_encode(['message' => 'Error creating meal: ' . $stmt->error]);
+        if (in_array($fileExtension, $allowedExtensions)) {
+            $newFilename = md5(uniqid()) . "." . $fileExtension;
+            $destinationPath = $uploadDirectory . $newFilename;
+            if (move_uploaded_file($file['tmp_name'], $destinationPath)) {
+                $mealImagePaths[] = $newFilename; // Store just the filename in the array
+                error_log("Meal image uploaded successfully to: " . $destinationPath);
+            } else {
+                $response['error'] = true;
+                $response['message'] = 'Error moving the uploaded meal image.';
+                echo json_encode($response);
+                exit;
+            }
+        } else {
+            $response['error'] = true;
+            $response['message'] = 'Invalid meal image file type.';
+            echo json_encode($response);
+            exit;
+        }
     }
+
+    // Handle other meal details from $_POST
+    $user_id = $_POST['user_id'] ?? null;
+    $name = $_POST['name'] ?? null;
+    $price = $_POST['price'] ?? null;
+    $quantity = $_POST['quantity'] ?? null;
+    $location = $_POST['location'] ?? null;
+    $delivery_option = $_POST['delivery_option'] ?? null;
+    $description = $_POST['description'] ?? null;
+
+    if ($user_id !== null && $name !== null && $price !== null && $quantity !== null && $location !== null && $delivery_option !== null && $description !== null) {
+        $image_paths_json = !empty($mealImagePaths) ? json_encode($mealImagePaths) : '[]';
+
+        $sql = "INSERT INTO Meals (user_id, name, price, quantity, location, delivery_option, description, image_paths, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("isdissss", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $image_paths_json);
+
+        if ($stmt->execute()) {
+            $response['success'] = true;
+            $response['message'] = 'Meal created successfully.';
+            $response['meal_id'] = $conn->insert_id;
+            $response['image_paths'] = $mealImagePaths; // Return the uploaded image paths
+        } else {
+            $response['error'] = true;
+            $response['message'] = 'Error creating meal: ' . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        $response['error'] = true;
+        $response['message'] = 'Missing required fields.';
+    }
+    echo json_encode($response);
 }
 
 function updateMeal() {
     global $conn;
-    $data = json_decode(file_get_contents("php://input"));
-    $meal_id = $data->meal_id;
-    $user_id = $data->user_id ?? null;
-    $name = $data->name ?? null;
-    $price = $data->price ?? null;
-    $quantity = $data->quantity ?? null;
-    $location = $data->location ?? null;
-    $delivery_option = $data->delivery_option ?? null;
-    $description = $data->description ?? null;
-    $image_paths = $data->image_paths ?? null;
+    parse_str(file_get_contents("php://input"), $_PUT);
+    $meal_id = $_PUT['meal_id'] ?? null;
+    $user_id = $_PUT['user_id'] ?? null;
+    $name = $_PUT['name'] ?? null;
+    $price = $_PUT['price'] ?? null;
+    $quantity = $_PUT['quantity'] ?? null;
+    $location = $_PUT['location'] ?? null;
+    $delivery_option = $_PUT['delivery_option'] ?? null;
+    $description = $_PUT['description'] ?? null;
+    $image_paths = $_PUT['image_paths'] ?? null;
 
-    $sql = "UPDATE Meals SET user_id=?, name=?, price=?, quantity=?, location=?, delivery_option=?, description=?, image_paths=? WHERE meal_id=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isdiisssi", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $image_paths, $meal_id);
+    if ($meal_id !== null && $name !== null && $price !== null && $quantity !== null && $location !== null && $delivery_option !== null && $description !== null) {
+        $sql = "UPDATE Meals SET user_id=?, name=?, price=?, quantity=?, location=?, delivery_option=?, description=?, image_paths=? WHERE meal_id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("isdiisssi", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $image_paths, $meal_id);
 
-    if ($stmt->execute()) {
-        echo json_encode(['message' => 'Meal updated successfully']);
+        if ($stmt->execute()) {
+            echo json_encode(['message' => 'Meal updated successfully']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['message' => 'Error updating meal: ' . $stmt->error]);
+        }
+        $stmt->close();
     } else {
-        http_response_code(500);
-        echo json_encode(['message' => 'Error updating meal: ' . $stmt->error]);
+        http_response_code(400);
+        echo json_encode(['message' => 'Missing required fields for update']);
     }
 }
 
