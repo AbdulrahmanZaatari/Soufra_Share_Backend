@@ -62,7 +62,9 @@ function getReviewsByReviewer($reviewer_id) {
 
 function getReviewsByReviewee($reviewee_id) {
     global $conn;
-    $sql = "SELECT r.review_id, r.reviewer_id, r.reviewee_id, r.rating, r.comment, r.review_date, u.username AS reviewer_username
+    $sql = "SELECT r.review_id, r.reviewer_id, r.reviewee_id, r.rating, r.comment, r.review_date,
+                   u.username AS reviewer_username,
+                   u.profile_picture AS reviewer_profile_picture   
             FROM Reviews r
             INNER JOIN Users u ON r.reviewer_id = u.user_id
             WHERE r.reviewee_id = ?";
@@ -109,6 +111,21 @@ function createReview() {
 
     if ($stmt->execute()) {
         http_response_code(201);
+
+        $updateSql = "
+            UPDATE Users
+            SET rating = (
+                SELECT AVG(rating)
+                FROM Reviews
+                WHERE reviewee_id = ?
+            )
+            WHERE user_id = ?
+        ";
+        $stmt2 = $conn->prepare($updateSql);
+        $stmt2->bind_param("ii", $reviewee_id, $reviewee_id);
+        $stmt2->execute();
+        $stmt2->close();
+
         echo json_encode(['message' => 'Review created successfully', 'review_id' => $conn->insert_id]);
     } else {
         http_response_code(500);

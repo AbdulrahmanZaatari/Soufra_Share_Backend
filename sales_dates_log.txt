@@ -1,0 +1,15 @@
+2025-04-15 23:43:21 - Request received for sales dates.
+2025-04-15 23:43:21 - Received user_id: 0
+2025-04-15 23:43:21 - ERROR: Invalid user ID: 0
+2025-04-15 23:45:00 - Request received for sales dates.
+2025-04-15 23:45:00 - Received user_id: 0
+2025-04-15 23:45:00 - ERROR: Invalid user ID: 0
+2025-04-15 23:45:00 - Request received for sales dates.
+2025-04-15 23:45:00 - Received user_id: 0
+2025-04-15 23:45:00 - ERROR: Invalid user ID: 0
+2025-04-15 23:51:21 - Request received for sales dates.
+2025-04-15 23:51:21 - Received user_id: 1
+2025-04-15 23:51:21 - JSON Response: []
+2025-04-16 00:00:55 - Request received for sales dates.
+2025-04-16 00:00:55 - Received user_id: 1
+2025-04-16 00:00:55 - JSON Response: [{"id":9,"sale_date":"2025-04-17","total_sales":55}]

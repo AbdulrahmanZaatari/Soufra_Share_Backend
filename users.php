@@ -1,4 +1,5 @@
 <?php
+
 require 'connection.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -97,7 +98,7 @@ function signInUser() {
     $email = $data->email;
     $password = $data->password;
 
-    $sql = "SELECT user_id, password FROM Users WHERE email = ?";
+    $sql = "SELECT user_id, password, is_cook FROM Users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -106,14 +107,17 @@ function signInUser() {
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            // Password is correct
-            echo json_encode(['success' => true, 'message' => 'Sign in successful', 'user_id' => $user['user_id']]);
+            // Instead of storing session variables, just return the data directly.
+            echo json_encode([
+                'success' => true,
+                'message' => 'Sign in successful',
+                'user_id' => $user['user_id'],
+                'is_cook' => $user['is_cook']
+            ]);
         } else {
-            // Incorrect password
             echo json_encode(['success' => false, 'message' => 'Incorrect password']);
         }
     } else {
-        // Email not found
         echo json_encode(['success' => false, 'message' => 'Email not found']);
     }
 }
@@ -142,8 +146,7 @@ function updateUserDetails() {
 }
 
 function updateUser() {
-    // This function is likely not used directly by the Android app anymore for updating details
-    // Consider removing or updating it if needed for other purposes.
+    // This function can be used for updating user details if needed.
     global $conn;
     $data = json_decode(file_get_contents("php://input"));
     $user_id = $data->user_id;

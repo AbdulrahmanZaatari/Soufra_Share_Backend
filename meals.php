@@ -14,7 +14,9 @@ switch ($method) {
         if (isset($_GET['id'])) {
             getMeal($_GET['id']);
         } else if (isset($_GET['user_id'])) {
-            getMealsByUser($_GET['user_id']);
+            getMealsByUser($_GET['user_id']); // Original function remains
+        } else if (isset($_GET['action']) && $_GET['action'] == 'getUserMealsWithDetails') { // New action
+            getUserMealsWithUserDetails($_GET['user_id'] ?? -1); // Get user_id for the new function
         } else if (isset($_GET['action']) && $_GET['action'] == 'getAllWithUserDetails') {
             getAllMealsWithUserDetails();
         } else if (isset($_GET['action']) && $_GET['action'] == 'search') {
@@ -56,6 +58,29 @@ function getMeals() {
 function getMealsByUser($user_id) {
     global $conn;
     $sql = "SELECT * FROM Meals WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $meals = [];
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $meals[] = $row;
+        }
+    }
+    echo json_encode($meals);
+}
+
+function getUserMealsWithUserDetails($user_id) { // New function
+    global $conn;
+    if ($user_id == -1) {
+        echo json_encode([]); // Or handle the error as needed
+        return;
+    }
+    $sql = "SELECT m.*, u.username, u.profile_picture, u.rating
+            FROM Meals m
+            JOIN Users u ON m.user_id = u.user_id
+            WHERE m.user_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
