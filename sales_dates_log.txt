@@ -13,3 +13,12 @@
 2025-04-16 00:00:55 - Request received for sales dates.
 2025-04-16 00:00:55 - Received user_id: 1
 2025-04-16 00:00:55 - JSON Response: [{"id":9,"sale_date":"2025-04-17","total_sales":55}]
+2025-04-16 15:08:14 - Request received for sales dates.
+2025-04-16 15:08:14 - Received user_id: 1
+2025-04-16 15:08:14 - JSON Response: [{"id":9,"sale_date":"2025-04-17","total_sales":55},{"id":11,"sale_date":"2025-04-16","total_sales":20000}]
+2025-04-16 15:08:39 - Request received for sales dates.
+2025-04-16 15:08:39 - Received user_id: 1
+2025-04-16 15:08:39 - JSON Response: [{"id":9,"sale_date":"2025-04-17","total_sales":55},{"id":11,"sale_date":"2025-04-16","total_sales":20000}]
+2025-04-18 04:05:24 - Request received for sales dates.
+2025-04-18 04:05:24 - Received user_id: 1
+2025-04-18 04:05:24 - JSON Response: [{"id":9,"sale_date":"2025-04-17","total_sales":55},{"id":11,"sale_date":"2025-04-16","total_sales":20000}]

@@ -131,11 +131,12 @@ function updateUserDetails() {
     $email = $data->email ?? null;
     $phone_num = $data->phone_num ?? null;
     $location = $data->location ?? null;
-    $profile_picture = $data->profile_picture ?? null; // This will be the Base64 string
+    $profile_picture = $data->profile_picture ?? null; 
+    $about = $data->about ?? null;
 
-    $sql = "UPDATE Users SET username=?, full_name=?, email=?, phone_num=?, location=?, profile_picture=? WHERE user_id=?";
+    $sql = "UPDATE Users SET username=?, full_name=?, email=?, phone_num=?, location=?, profile_picture=?, about=? WHERE user_id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssi", $username, $full_name, $email, $phone_num, $location, $profile_picture, $user_id);
+    $stmt->bind_param("sssssssi", $username, $full_name, $email, $phone_num, $location, $profile_picture, $about, $user_id);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'User details updated successfully']);
@@ -146,7 +147,6 @@ function updateUserDetails() {
 }
 
 function updateUser() {
-    // This function can be used for updating user details if needed.
     global $conn;
     $data = json_decode(file_get_contents("php://input"));
     $user_id = $data->user_id;

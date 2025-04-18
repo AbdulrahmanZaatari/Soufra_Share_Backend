@@ -179,35 +179,62 @@ function createMeal() {
 
 function updateMeal() {
     global $conn;
-    parse_str(file_get_contents("php://input"), $_PUT);
-    $meal_id = $_PUT['meal_id'] ?? null;
-    $user_id = $_PUT['user_id'] ?? null;
-    $name = $_PUT['name'] ?? null;
-    $price = $_PUT['price'] ?? null;
-    $quantity = $_PUT['quantity'] ?? null;
-    $location = $_PUT['location'] ?? null;
-    $delivery_option = $_PUT['delivery_option'] ?? null;
-    $description = $_PUT['description'] ?? null;
-    $image_paths = $_PUT['image_paths'] ?? null;
+    $raw_input = file_get_contents("php://input");
+    error_log("PHP updateMeal Raw Input: " . $raw_input);
+    $data = json_decode($raw_input, true);
 
-    if ($meal_id !== null && $name !== null && $price !== null && $quantity !== null && $location !== null && $delivery_option !== null && $description !== null) {
-        $sql = "UPDATE Meals SET user_id=?, name=?, price=?, quantity=?, location=?, delivery_option=?, description=?, image_paths=? WHERE meal_id=?";
+    error_log("PHP updateMeal Decoded Data (print_r): " . print_r($data, true));
+    error_log("PHP updateMeal Decoded Data (var_dump): " . var_export($data, true)); 
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log("PHP updateMeal JSON Decode Error: " . json_last_error_msg());
+        http_response_code(400); 
+        echo json_encode(['message' => 'Invalid JSON data received']);
+        return; 
+    }
+    $meal_id = $data['meal_id'] ?? null;
+    $user_id = $data['user_id'] ?? null;
+    $name = $data['name'] ?? null;
+    $price = $data['price'] ?? null;
+    $quantity = $data['quantity'] ?? null;
+    $location = $data['location'] ?? null;
+    $delivery_option = $data['delivery_option'] ?? null;
+    $description = $data['description'] ?? null;
+    error_log("PHP updateMeal Retrieved Variables: " .
+              "meal_id=" . ($meal_id === null ? 'NULL' : $meal_id) .
+              ", user_id=" . ($user_id === null ? 'NULL' : $user_id) .
+              ", name=" . ($name === null ? 'NULL' : '"' . $name . '"') . 
+              ", price=" . ($price === null ? 'NULL' : $price) .
+              ", quantity=" . ($quantity === null ? 'NULL' : $quantity) .
+              ", location=" . ($location === null ? 'NULL' : '"' . $location . '"') . 
+              ", delivery_option=" . ($delivery_option === null ? 'NULL' : $delivery_option) .
+              ", description=" . ($description === null ? 'NULL' : '"' . $description . '"')); 
+
+    if ($meal_id !== null && $user_id !== null && $name !== null && $price !== null && $quantity !== null && $location !== null && $delivery_option !== null && $description !== null) {
+        error_log("PHP updateMeal: All required fields are present. Proceeding with SQL update.");
+        $sql = "UPDATE Meals SET user_id=?, name=?, price=?, quantity=?, location=?, delivery_option=?, description=? WHERE meal_id=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("isdiisssi", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $image_paths, $meal_id);
-
+        $bind_result = $stmt->bind_param("isdiissi", $user_id, $name, $price, $quantity, $location, $delivery_option, $description, $meal_id);
+        if ($bind_result === false) {
+            error_log("PHP updateMeal bind_param failed: " . $stmt->error);
+        } else {
+            error_log("PHP updateMeal bind_param successful.");
+        }
         if ($stmt->execute()) {
+            error_log("PHP updateMeal SQL Execute successful.");
             echo json_encode(['message' => 'Meal updated successfully']);
         } else {
-            http_response_code(500);
+            http_response_code(500); 
+            error_log("PHP updateMeal SQL Execution Error: " . $stmt->error); 
             echo json_encode(['message' => 'Error updating meal: ' . $stmt->error]);
         }
         $stmt->close();
     } else {
-        http_response_code(400);
+        error_log("PHP updateMeal: Validation failed. Missing required fields.");
+        http_response_code(400); 
         echo json_encode(['message' => 'Missing required fields for update']);
     }
 }
-
 function deleteMeal() {
     global $conn;
 
@@ -234,7 +261,8 @@ function getAllMealsWithUserDetails() {
     global $conn;
     $sql = "SELECT m.*, u.username, u.profile_picture, u.rating
             FROM Meals m
-            JOIN Users u ON m.user_id = u.user_id";
+            JOIN Users u ON m.user_id = u.user_id
+            WHERE m.quantity > 0"; 
     $result = $conn->query($sql);
     $mealsWithDetails = [];
     if ($result->num_rows > 0) {

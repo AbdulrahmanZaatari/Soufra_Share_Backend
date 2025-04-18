@@ -21,8 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $file = $_FILES['profile_image'];
             error_log("\$_FILES['profile_image'] is set");
             error_log("File details: " . print_r($file, true));
-
-            // Check for upload errors
             if ($file['error'] === UPLOAD_ERR_OK) {
                 error_log("File upload error is OK");
                 $filename = basename($file['name']);

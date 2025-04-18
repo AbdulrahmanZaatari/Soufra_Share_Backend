@@ -1,0 +1,28 @@
+2025-04-16 15:08:18 - Request received to generate sales report.
+2025-04-16 15:08:18 - Received sale_date: 2025-04-17
+2025-04-16 15:08:18 - Received seller_id (from session): 0
+2025-04-16 15:08:18 - ERROR: Sales date or seller ID missing. Date: 2025-04-17, Seller ID: 0
+2025-04-16 15:10:11 - Request received to generate sales report.
+2025-04-16 15:10:11 - Received sale_date: 2025-04-13
+2025-04-16 15:10:11 - Received seller_id (from session): 0
+2025-04-16 15:10:11 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-16 15:10:38 - Request received to generate sales report.
+2025-04-16 15:10:38 - Received sale_date: 2025-04-13
+2025-04-16 15:10:38 - Received seller_id (from session): 0
+2025-04-16 15:10:38 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-16 15:10:50 - Request received to generate sales report.
+2025-04-16 15:10:50 - Received sale_date: 2025-04-13
+2025-04-16 15:10:50 - Received seller_id (from session): 0
+2025-04-16 15:10:50 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-16 15:10:58 - Request received to generate sales report.
+2025-04-16 15:10:58 - Received sale_date: 2025-04-13
+2025-04-16 15:10:58 - Received seller_id (from session): 0
+2025-04-16 15:10:58 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-16 15:11:02 - Request received to generate sales report.
+2025-04-16 15:11:02 - Received sale_date: 2025-04-13
+2025-04-16 15:11:02 - Received seller_id (from session): 0
+2025-04-16 15:11:02 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-16 15:11:22 - Request received to generate sales report.
+2025-04-16 15:11:22 - Received sale_date: 2025-04-13
+2025-04-16 15:11:22 - Received seller_id (from session): 0
+2025-04-16 15:11:22 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0

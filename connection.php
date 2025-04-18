@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root"; 
-$password = ""; 
+$password = "Abedamal123!"; 
 $dbname = "soufra_share";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
