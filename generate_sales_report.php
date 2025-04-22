@@ -20,8 +20,13 @@ $sale_date = isset($_GET['date']) ? $_GET['date'] : null;
 $logMessage = date("Y-m-d H:i:s") . " - Received sale_date: " . $sale_date . "\n";
 file_put_contents($logFile, $logMessage, FILE_APPEND);
 
-// Get the seller ID from the session (assuming user is logged in)
-$seller_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 0;
+
+$seller_id = 0;
+if (isset($_SESSION['user_id'])) {
+    $seller_id = $_SESSION['user_id'];
+} elseif (isset($_GET['user_id'])) {
+    $seller_id = intval($_GET['user_id']);
+}
 $logMessage = date("Y-m-d H:i:s") . " - Received seller_id (from session): " . $seller_id . "\n";
 file_put_contents($logFile, $logMessage, FILE_APPEND);
 

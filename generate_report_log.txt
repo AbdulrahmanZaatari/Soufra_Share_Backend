@@ -26,3 +26,47 @@
 2025-04-16 15:11:22 - Received sale_date: 2025-04-13
 2025-04-16 15:11:22 - Received seller_id (from session): 0
 2025-04-16 15:11:22 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-20 02:44:24 - Request received to generate sales report.
+2025-04-20 02:44:24 - Received sale_date: 2025-04-20
+2025-04-20 02:44:24 - Received seller_id (from session): 0
+2025-04-20 02:44:24 - ERROR: Sales date or seller ID missing. Date: 2025-04-20, Seller ID: 0
+2025-04-22 15:03:59 - Request received to generate sales report.
+2025-04-22 15:03:59 - Received sale_date: 2025-04-13
+2025-04-22 15:03:59 - Received seller_id (from session): 0
+2025-04-22 15:03:59 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-22 15:07:21 - Request received to generate sales report.
+2025-04-22 15:07:21 - Received sale_date: 2025-04-13
+2025-04-22 15:07:21 - Received seller_id (from session): 0
+2025-04-22 15:07:21 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-22 15:07:24 - Request received to generate sales report.
+2025-04-22 15:07:24 - Received sale_date: 2025-04-13
+2025-04-22 15:07:24 - Received seller_id (from session): 0
+2025-04-22 15:07:24 - ERROR: Sales date or seller ID missing. Date: 2025-04-13, Seller ID: 0
+2025-04-22 15:08:34 - Request received to generate sales report.
+2025-04-22 15:08:34 - Received sale_date: 2025-04-13
+2025-04-22 15:08:34 - Received seller_id (from session): 1
+2025-04-22 15:08:34 - Sales Summary: Total Sales: 0, Total Orders: 0
+2025-04-22 15:08:34 - Top Meals fetched.
+2025-04-22 15:08:34 - Order details fetched.
+2025-04-22 15:08:34 - Sales report PDF generated successfully.
+2025-04-22 15:08:43 - Request received to generate sales report.
+2025-04-22 15:08:43 - Received sale_date: 2025-04-16
+2025-04-22 15:08:43 - Received seller_id (from session): 1
+2025-04-22 15:08:43 - Sales Summary: Total Sales: 20000, Total Orders: 2
+2025-04-22 15:08:43 - Top Meals fetched.
+2025-04-22 15:08:43 - Order details fetched.
+2025-04-22 15:08:43 - Sales report PDF generated successfully.
+2025-04-22 15:09:28 - Request received to generate sales report.
+2025-04-22 15:09:28 - Received sale_date: 2025-04-17
+2025-04-22 15:09:28 - Received seller_id (from session): 1
+2025-04-22 15:09:28 - Sales Summary: Total Sales: 55, Total Orders: 2
+2025-04-22 15:09:28 - Top Meals fetched.
+2025-04-22 15:09:28 - Order details fetched.
+2025-04-22 15:09:28 - Sales report PDF generated successfully.
+2025-04-22 15:10:59 - Request received to generate sales report.
+2025-04-22 15:10:59 - Received sale_date: 2025-04-20
+2025-04-22 15:10:59 - Received seller_id (from session): 6
+2025-04-22 15:10:59 - Sales Summary: Total Sales: 31, Total Orders: 2
+2025-04-22 15:10:59 - Top Meals fetched.
+2025-04-22 15:10:59 - Order details fetched.
+2025-04-22 15:10:59 - Sales report PDF generated successfully.
