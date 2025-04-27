@@ -4,7 +4,7 @@ include('connection.php');
 
 $logFile = 'sales_dates_log.txt';
 
-// Log the request
+
 $logMessage = date("Y-m-d H:i:s") . " - Request received for sales dates.\n";
 file_put_contents($logFile, $logMessage, FILE_APPEND);
 
@@ -14,22 +14,22 @@ if ($conn->connect_error) {
     die(json_encode(array("error" => "Database connection error")));
 }
 
-// Ensure the request method is POST
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
+    http_response_code(405); 
     $errorMessage = "Invalid request method: " . $_SERVER['REQUEST_METHOD'] . "\n";
     file_put_contents($logFile, date("Y-m-d H:i:s") . " - ERROR: " . $errorMessage, FILE_APPEND);
     echo json_encode(array("error" => "Invalid request method"));
     exit();
 }
 
-// Get the user ID (seller_id in this case) from the POST request
+
 $seller_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
 $logMessage = date("Y-m-d H:i:s") . " - Received user_id: " . $seller_id . "\n";
 file_put_contents($logFile, $logMessage, FILE_APPEND);
 
 if ($seller_id <= 0) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     $errorMessage = "Invalid user ID: " . $seller_id . "\n";
     file_put_contents($logFile, date("Y-m-d H:i:s") . " - ERROR: " . $errorMessage, FILE_APPEND);
     echo json_encode(array("error" => "Invalid user ID"));

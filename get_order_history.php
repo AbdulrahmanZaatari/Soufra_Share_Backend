@@ -6,9 +6,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Ensure the request method is POST
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); // Method Not Allowed
+    http_response_code(405); 
     echo json_encode(array("error" => "Invalid request method"));
     exit();
 }
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
 
 if ($user_id <= 0) {
-    http_response_code(400); // Bad Request
+    http_response_code(400); 
     echo json_encode(array("error" => "Invalid user ID"));
     exit();
 }
