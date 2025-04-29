@@ -31,3 +31,9 @@
 2025-04-22 15:17:48 - Request received for sales dates.
 2025-04-22 15:17:48 - Received user_id: 6
 2025-04-22 15:17:48 - JSON Response: [{"id":14,"sale_date":"2025-04-20","total_sales":31}]
+2025-04-27 19:14:23 - Request received for sales dates.
+2025-04-27 19:14:23 - Received user_id: 1
+2025-04-27 19:14:23 - JSON Response: [{"id":15,"sale_date":"2025-04-20","total_sales":8},{"id":13,"sale_date":"2025-04-18","total_sales":8064},{"id":9,"sale_date":"2025-04-17","total_sales":55},{"id":11,"sale_date":"2025-04-16","total_sales":20000}]
+2025-04-29 13:29:43 - Request received for sales dates.
+2025-04-29 13:29:43 - Received user_id: 1
+2025-04-29 13:29:43 - JSON Response: [{"id":15,"sale_date":"2025-04-20","total_sales":8},{"id":13,"sale_date":"2025-04-18","total_sales":8064},{"id":9,"sale_date":"2025-04-17","total_sales":55},{"id":11,"sale_date":"2025-04-16","total_sales":20000}]

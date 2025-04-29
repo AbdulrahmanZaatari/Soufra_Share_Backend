@@ -98,7 +98,7 @@ function signInUser() {
     $email = $data->email;
     $password = $data->password;
 
-    $sql = "SELECT user_id, password, is_cook FROM Users WHERE email = ?";
+    $sql = "SELECT user_id, password, is_cook, profile_picture FROM Users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -107,12 +107,12 @@ function signInUser() {
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
-            // Instead of storing session variables, just return the data directly.
             echo json_encode([
                 'success' => true,
                 'message' => 'Sign in successful',
                 'user_id' => $user['user_id'],
-                'is_cook' => $user['is_cook']
+                'is_cook' => $user['is_cook'],
+                'profile_picture' => $user['profile_picture'] ?? null
             ]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Incorrect password']);
